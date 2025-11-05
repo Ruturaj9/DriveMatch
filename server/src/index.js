@@ -3,6 +3,7 @@ import cors from "cors";            //Lets your frontend (React) talk to your ba
 import dotenv from "dotenv";        //Reads variables from a .env file (like your DB URL and port)
 import connectDB from "./config/db.js";
 import vehicleRoutes from "./routes/vehicleRoutes.js";
+import reviewRoutes from "./routes/reviewRoutes.js";
 
 dotenv.config(); // Load .env variables
 
@@ -16,6 +17,7 @@ connectDB();
 app.use(cors());
 app.use(express.json());
 app.use("/api/vehicles", vehicleRoutes);
+app.use("/api/reviews", reviewRoutes);
 
 // Basic test route
 app.get("/", (req, res) => {
