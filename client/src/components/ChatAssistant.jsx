@@ -1,26 +1,40 @@
 import React, { useState, useRef, useEffect } from "react";
 import axios from "axios";
-// eslint-disable-next-line no-unused-vars
-import { motion, AnimatePresence } from "framer-motion"; // For smooth animations
+import { motion, AnimatePresence } from "framer-motion";
 
 const ChatAssistant = () => {
   const [isOpen, setIsOpen] = useState(false);
-  const [messages, setMessages] = useState([
-    { sender: "bot", text: "👋 Hi! I’m DriveMatch AI — ask me about cars or bikes." },
-  ]);
+  const [messages, setMessages] = useState(() => {
+    // 🧠 Load messages from localStorage on start
+    const saved = localStorage.getItem("drivematch_chat");
+    return saved
+      ? JSON.parse(saved)
+      : [{ sender: "bot", text: "👋 Hi! I’m DriveMatch AI — ask me about cars or bikes." }];
+  });
   const [input, setInput] = useState("");
   const [isTyping, setIsTyping] = useState(false);
   const chatEndRef = useRef(null);
 
+  // 🧠 Save messages every time they change
   useEffect(() => {
+    localStorage.setItem("drivematch_chat", JSON.stringify(messages));
     chatEndRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [messages, isTyping]);
+
+  // 🧹 Optional: clear messages after 24 hours
+  useEffect(() => {
+    const lastSaved = localStorage.getItem("drivematch_chat_timestamp");
+    const now = Date.now();
+    if (!lastSaved || now - parseInt(lastSaved) > 24 * 60 * 60 * 1000) {
+      localStorage.removeItem("drivematch_chat");
+    }
+    localStorage.setItem("drivematch_chat_timestamp", now);
+  }, []);
 
   const sendMessage = async (e) => {
     e.preventDefault();
     if (!input.trim()) return;
 
-    // Add user message
     const newMsg = { sender: "user", text: input };
     setMessages((prev) => [...prev, newMsg]);
     setInput("");
@@ -35,14 +49,14 @@ const ChatAssistant = () => {
         botResponse += "\n\n🧠 **Reasoning:**\n" + reply.reasoning.map(r => `- ${r}`).join("\n");
       }
 
-      // Add delay to simulate AI typing
+      // Add delay for realism
       setTimeout(() => {
         setMessages((prev) => [
           ...prev,
           { sender: "bot", text: botResponse, results: reply.results || [] },
         ]);
         setIsTyping(false);
-      }, 1000 + Math.random() * 800); // 1–1.8s delay
+      }, 1000 + Math.random() * 800);
     } catch (err) {
       console.error(err);
       setMessages((prev) => [
@@ -51,6 +65,11 @@ const ChatAssistant = () => {
       ]);
       setIsTyping(false);
     }
+  };
+
+  const clearChat = () => {
+    localStorage.removeItem("drivematch_chat");
+    setMessages([{ sender: "bot", text: "🧹 Chat cleared. Start a new conversation!" }]);
   };
 
   return (
@@ -69,10 +88,13 @@ const ChatAssistant = () => {
           {/* Header */}
           <div className="bg-blue-600 text-white p-3 font-semibold flex justify-between items-center">
             DriveMatch AI Assistant
-            <button onClick={() => setIsOpen(false)} className="text-white">✖</button>
+            <div className="flex gap-3">
+              <button onClick={clearChat} title="Clear chat" className="text-white text-sm">🗑</button>
+              <button onClick={() => setIsOpen(false)} className="text-white text-lg">✖</button>
+            </div>
           </div>
 
-          {/* Messages Section */}
+          {/* Messages */}
           <div className="flex-1 overflow-y-auto p-4 space-y-3">
             <AnimatePresence>
               {messages.map((msg, i) => (
@@ -125,7 +147,6 @@ const ChatAssistant = () => {
               ))}
             </AnimatePresence>
 
-            {/* Typing Indicator */}
             {isTyping && (
               <div className="flex items-center space-x-2 text-gray-500 dark:text-gray-400">
                 <span>🤖</span>
@@ -136,11 +157,10 @@ const ChatAssistant = () => {
                 </span>
               </div>
             )}
-
             <div ref={chatEndRef} />
           </div>
 
-          {/* Input Box */}
+          {/* Input */}
           <form onSubmit={sendMessage} className="p-3 border-t dark:border-gray-700 flex gap-2">
             <input
               type="text"
