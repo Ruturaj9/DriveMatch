@@ -4,6 +4,7 @@ import dotenv from "dotenv";        //Reads variables from a .env file (like you
 import connectDB from "./config/db.js";
 import vehicleRoutes from "./routes/vehicleRoutes.js";
 import reviewRoutes from "./routes/reviewRoutes.js";
+import advisorRoutes from "./routes/advisorRoutes.js";
 
 dotenv.config(); // Load .env variables
 
@@ -18,6 +19,7 @@ app.use(cors());
 app.use(express.json());
 app.use("/api/vehicles", vehicleRoutes);
 app.use("/api/reviews", reviewRoutes);
+app.use("/api/advisor", advisorRoutes);
 
 // Basic test route
 app.get("/", (req, res) => {
