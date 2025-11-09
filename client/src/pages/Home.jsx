@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
+import { Link } from "react-router-dom"; // ✅ added import
 
 const Home = () => {
   const [vehicles, setVehicles] = useState([]);
@@ -147,9 +148,14 @@ const Home = () => {
                 <p className="text-blue-600 dark:text-blue-400 font-semibold text-lg mt-1">
                   ₹{v.price?.toLocaleString()}
                 </p>
-                <button className="mt-4 bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 rounded-lg transition">
+
+                {/* ✅ Replaced <button> with <Link> */}
+                <Link
+                  to={`/vehicle/${v._id}`}
+                  className="mt-4 bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 rounded-lg text-center transition block"
+                >
                   View Details
-                </button>
+                </Link>
               </div>
             ))}
           </div>
