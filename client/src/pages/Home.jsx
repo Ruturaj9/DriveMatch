@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
-import { Link } from "react-router-dom"; // ✅ added import
+import { Link } from "react-router-dom"; // ✅ Added import for navigation
 
 const Home = () => {
   const [vehicles, setVehicles] = useState([]);
@@ -149,7 +149,7 @@ const Home = () => {
                   ₹{v.price?.toLocaleString()}
                 </p>
 
-                {/* ✅ Replaced <button> with <Link> */}
+                {/* ✅ "View Details" as Link */}
                 <Link
                   to={`/vehicle/${v._id}`}
                   className="mt-4 bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 rounded-lg text-center transition block"
