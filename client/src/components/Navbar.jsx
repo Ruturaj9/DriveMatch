@@ -14,8 +14,8 @@ const Navbar = () => {
 
   return (
     <nav className="sticky top-0 z-50 bg-white/80 dark:bg-gray-900/80 backdrop-blur-md border-b border-gray-200 dark:border-gray-700 shadow-sm">
-      <div className="max-w-7xl mx-auto px-6 py-3 flex items-center justify-between">
-        {/* Brand Logo */}
+      <div className="max-w-7xl mx-auto flex justify-between items-center px-6 py-3">
+        {/* Brand */}
         <Link
           to="/"
           className="text-2xl font-bold text-blue-600 hover:text-blue-700 transition"
@@ -23,7 +23,7 @@ const Navbar = () => {
           DriveMatch 🚗
         </Link>
 
-        {/* Desktop Navigation */}
+        {/* Desktop Links */}
         <div className="hidden md:flex items-center gap-6">
           {navItems.map((item) => (
             <NavLink
@@ -59,7 +59,7 @@ const Navbar = () => {
         </button>
       </div>
 
-      {/* Mobile Menu */}
+      {/* Mobile Dropdown */}
       {menuOpen && (
         <div className="md:hidden bg-white dark:bg-gray-900 border-t border-gray-200 dark:border-gray-700">
           {navItems.map((item) => (
