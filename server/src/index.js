@@ -5,6 +5,7 @@ import connectDB from "./config/db.js";
 import vehicleRoutes from "./routes/vehicleRoutes.js";
 import reviewRoutes from "./routes/reviewRoutes.js";
 import advisorRoutes from "./routes/advisorRoutes.js";
+import compareRoutes from "./routes/compareRoutes.js";
 
 dotenv.config(); // Load .env variables
 
@@ -20,6 +21,7 @@ app.use(express.json());
 app.use("/api/vehicles", vehicleRoutes);
 app.use("/api/reviews", reviewRoutes);
 app.use("/api/advisor", advisorRoutes);
+app.use("/api/compare", compareRoutes);
 
 // Basic test route
 app.get("/", (req, res) => {
