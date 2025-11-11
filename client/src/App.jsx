@@ -1,33 +1,35 @@
-import React from "react";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import Home from "./pages/Home";
+import VehicleDetails from "./pages/VehicleDetails";
+import Compare from "./pages/Compare";
+import Insights from "./pages/Insights";
 import ChatAssistant from "./components/ChatAssistant";
 import Navbar from "./components/Navbar";
-import { ThemeProvider } from "./context/ThemeContext";
-
-const VehicleDetails = () => <div className="p-10 text-center">Vehicle Details Page</div>;
-const Compare = () => <div className="p-10 text-center">Compare Page</div>;
-const Insights = () => <div className="p-10 text-center">Insights Page</div>;
+import { ThemeProvider } from "./context/ThemeProvider"; // ✅ updated import
+import { CompareProvider } from "./context/CompareProvider";
 
 function App() {
   return (
     <ThemeProvider>
-      <Router>
-        <div className="min-h-screen bg-gray-50 dark:bg-gray-900 text-gray-900 dark:text-white transition-colors">
-          {/* 🔹 Global Navbar */}
-          <Navbar />
+      <CompareProvider>
+        <Router>
+          <div className="min-h-screen bg-gray-50 dark:bg-gray-900 text-gray-900 dark:text-white transition-colors">
+            {/* 🔹 Global Navbar */}
+            <Navbar />
 
-          <Routes>
-            <Route path="/" element={<Home />} />
-            <Route path="/vehicle/:id" element={<VehicleDetails />} />
-            <Route path="/compare" element={<Compare />} />
-            <Route path="/insights" element={<Insights />} />
-          </Routes>
+            {/* 🔹 Page Routes */}
+            <Routes>
+              <Route path="/" element={<Home />} />
+              <Route path="/vehicle/:id" element={<VehicleDetails />} />
+              <Route path="/compare" element={<Compare />} />
+              <Route path="/insights" element={<Insights />} />
+            </Routes>
 
-          {/* 🔹 Global Floating Chat */}
-          <ChatAssistant />
-        </div>
-      </Router>
+            {/* 🔹 Floating Chat Assistant */}
+            <ChatAssistant />
+          </div>
+        </Router>
+      </CompareProvider>
     </ThemeProvider>
   );
 }

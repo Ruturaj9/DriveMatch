@@ -1,6 +1,9 @@
 import React, { useState, useRef, useEffect } from "react";
 import axios from "axios";
-import { motion, AnimatePresence } from "framer-motion";
+import fm from "framer-motion";
+// eslint-disable-next-line no-unused-vars
+const { motion, AnimatePresence } = fm;
+
 
 const ChatAssistant = () => {
   const [isOpen, setIsOpen] = useState(false);

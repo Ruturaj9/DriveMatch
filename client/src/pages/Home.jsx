@@ -1,6 +1,6 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState, useMemo } from "react";
 import axios from "axios";
-import { Link } from "react-router-dom"; // ✅ Added import for navigation
+import { Link } from "react-router-dom";
 
 const Home = () => {
   const [vehicles, setVehicles] = useState([]);
@@ -11,36 +11,40 @@ const Home = () => {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
+    const fetchTrending = async () => {
+      try {
+        const res = await axios.get("http://localhost:5000/api/vehicles/trending");
+        setVehicles(res.data);
+      } catch (err) {
+        console.error("Error fetching vehicles:", err);
+      } finally {
+        setLoading(false);
+      }
+    };
     fetchTrending();
   }, []);
 
-  const fetchTrending = async () => {
-    try {
-      const res = await axios.get("http://localhost:5000/api/vehicles/trending");
-      setVehicles(res.data);
-    } catch (err) {
-      console.error(err);
-    } finally {
-      setLoading(false);
-    }
-  };
+  // ✅ Memoize filtering to avoid re-computation on each render
+  const filteredVehicles = useMemo(() => {
+    return vehicles.filter((v) => {
+      const matchesSearch =
+        v.name.toLowerCase().includes(search.toLowerCase()) ||
+        v.brand.toLowerCase().includes(search.toLowerCase());
+      const matchesType = type === "all" || v.type === type;
+      const matchesPrice = v.price >= minPrice && v.price <= maxPrice;
+      return matchesSearch && matchesType && matchesPrice;
+    });
+  }, [vehicles, search, type, minPrice, maxPrice]);
 
-  // 🔎 Filter logic
-  const filteredVehicles = vehicles.filter((v) => {
-    const matchesSearch =
-      v.name.toLowerCase().includes(search.toLowerCase()) ||
-      v.brand.toLowerCase().includes(search.toLowerCase());
-    const matchesType = type === "all" || v.type === type;
-    const matchesPrice = v.price >= minPrice && v.price <= maxPrice;
-    return matchesSearch && matchesType && matchesPrice;
-  });
-
-  // 🔄 Reset filters
   const resetFilters = () => {
     setSearch("");
     setType("all");
     setMinPrice(0);
     setMaxPrice(2000000);
+  };
+
+  const handleImageError = (e) => {
+    e.target.src = "/placeholder.jpg";
   };
 
   return (
@@ -122,9 +126,14 @@ const Home = () => {
         </h3>
 
         {loading ? (
-          <p className="text-center text-gray-500 dark:text-gray-400">
-            Loading trending vehicles...
-          </p>
+          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+            {Array.from({ length: 4 }).map((_, i) => (
+              <div
+                key={i}
+                className="animate-pulse bg-gray-200 dark:bg-gray-800 rounded-2xl h-56"
+              ></div>
+            ))}
+          </div>
         ) : filteredVehicles.length === 0 ? (
           <p className="text-center text-gray-500 dark:text-gray-400">
             No vehicles found for selected filters.
@@ -139,6 +148,7 @@ const Home = () => {
                 <img
                   src={v.image || "/placeholder.jpg"}
                   alt={v.name}
+                  onError={handleImageError}
                   className="w-full h-40 object-cover rounded-xl"
                 />
                 <h4 className="text-lg font-bold text-gray-800 dark:text-white mt-3">
@@ -149,7 +159,6 @@ const Home = () => {
                   ₹{v.price?.toLocaleString()}
                 </p>
 
-                {/* ✅ "View Details" as Link */}
                 <Link
                   to={`/vehicle/${v._id}`}
                   className="mt-4 bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 rounded-lg text-center transition block"

@@ -1,10 +1,16 @@
-import React, { useState, useContext } from "react";
-import { Link, NavLink } from "react-router-dom";
+import React, { useState, useContext, useEffect } from "react";
+import { Link, NavLink, useLocation } from "react-router-dom";
 import { ThemeContext } from "../context/ThemeContext";
 
 const Navbar = () => {
   const { theme, toggleTheme } = useContext(ThemeContext);
   const [menuOpen, setMenuOpen] = useState(false);
+  const location = useLocation();
+
+  // 🧠 Close mobile menu automatically on route change
+  useEffect(() => {
+    setMenuOpen(false);
+  }, [location]);
 
   const navItems = [
     { name: "Home", path: "/" },
@@ -52,43 +58,46 @@ const Navbar = () => {
 
         {/* Mobile Menu Button */}
         <button
+          aria-label="Toggle navigation menu"
           onClick={() => setMenuOpen(!menuOpen)}
-          className="md:hidden text-2xl text-gray-700 dark:text-gray-200"
+          className="md:hidden text-2xl text-gray-700 dark:text-gray-200 focus:outline-none"
         >
           ☰
         </button>
       </div>
 
       {/* Mobile Dropdown */}
-      {menuOpen && (
-        <div className="md:hidden bg-white dark:bg-gray-900 border-t border-gray-200 dark:border-gray-700">
-          {navItems.map((item) => (
-            <NavLink
-              key={item.name}
-              to={item.path}
-              onClick={() => setMenuOpen(false)}
-              className={({ isActive }) =>
-                `block px-6 py-3 border-b border-gray-100 dark:border-gray-700 ${
-                  isActive
-                    ? "text-blue-600 dark:text-blue-400 font-semibold"
-                    : "text-gray-700 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400"
-                }`
-              }
+      <AnimatePresence>
+        {menuOpen && (
+          <div className="md:hidden bg-white dark:bg-gray-900 border-t border-gray-200 dark:border-gray-700">
+            {navItems.map((item) => (
+              <NavLink
+                key={item.name}
+                to={item.path}
+                onClick={() => setMenuOpen(false)}
+                className={({ isActive }) =>
+                  `block px-6 py-3 border-b border-gray-100 dark:border-gray-700 ${
+                    isActive
+                      ? "text-blue-600 dark:text-blue-400 font-semibold"
+                      : "text-gray-700 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400"
+                  }`
+                }
+              >
+                {item.name}
+              </NavLink>
+            ))}
+            <button
+              onClick={() => {
+                toggleTheme();
+                setMenuOpen(false);
+              }}
+              className="block w-full text-left px-6 py-3 bg-gray-100 dark:bg-gray-800 text-sm text-gray-800 dark:text-gray-100"
             >
-              {item.name}
-            </NavLink>
-          ))}
-          <button
-            onClick={() => {
-              toggleTheme();
-              setMenuOpen(false);
-            }}
-            className="block w-full text-left px-6 py-3 bg-gray-100 dark:bg-gray-800 text-sm"
-          >
-            {theme === "dark" ? "🌞 Light Mode" : "🌙 Dark Mode"}
-          </button>
-        </div>
-      )}
+              {theme === "dark" ? "🌞 Light Mode" : "🌙 Dark Mode"}
+            </button>
+          </div>
+        )}
+      </AnimatePresence>
     </nav>
   );
 };
