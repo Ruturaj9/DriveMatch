@@ -7,6 +7,9 @@ import ChatAssistant from "./components/ChatAssistant";
 import Navbar from "./components/Navbar";
 import { ThemeProvider } from "./context/ThemeProvider";
 import { CompareProvider } from "./context/CompareProvider";
+import CompareHistory from "./pages/CompareHistory";
+import Insights from "./pages/Insights";
+
 
 function App() {
   return (
@@ -19,7 +22,8 @@ function App() {
               <Route path="/" element={<Home />} />
               <Route path="/vehicle/:id" element={<VehicleDetails />} />
               <Route path="/compare" element={<Compare />} />
-              {/* <Route path="/insights" element={<Insights />} /> */}
+              <Route path="/insights" element={<Insights />} />
+              <Route path="/compare-history" element={<CompareHistory />} />
             </Routes>
             <ChatAssistant />
           </div>

@@ -2,6 +2,7 @@ import { useEffect, useState, useContext } from "react";
 import { useParams, Link } from "react-router-dom";
 import axios from "axios";
 import { CompareContext } from "../context/compareContext";
+import ReviewsSection from "../components/ReviewsSection";
 
 const VehicleDetails = () => {
   const { id } = useParams();
@@ -16,7 +17,7 @@ const VehicleDetails = () => {
       try {
         const [vehicleRes, similarRes] = await Promise.all([
           axios.get(`http://localhost:5000/api/vehicles/${id}`),
-          axios.get(`http://localhost:5000/api/vehicles/similar/${id}`)
+          axios.get(`http://localhost:5000/api/vehicles/similar/${id}`),
         ]);
         setVehicle(vehicleRes.data);
         setSimilar(similarRes.data?.similar || []);
@@ -177,6 +178,8 @@ const VehicleDetails = () => {
             </div>
           )}
         </div>
+        {/* 🧩 Reviews Section */}
+        <ReviewsSection vehicleId={vehicle._id} />
       </div>
 
       {/* 🔹 Simple fade-in animation for toast */}

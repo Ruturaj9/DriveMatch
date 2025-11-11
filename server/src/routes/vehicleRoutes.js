@@ -52,6 +52,21 @@ router.get("/trending", async (req, res) => {
 });
 
 /* ==========================================================
+   🔍 GET: Single Vehicle Details
+   ========================================================== */
+router.get("/:id", async (req, res) => {
+  try {
+    const vehicle = await Vehicle.findById(req.params.id);
+    if (!vehicle) {
+      return res.status(404).json({ message: "Vehicle not found" });
+    }
+    res.json(vehicle);
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
+/* ==========================================================
    ⚙️ Helper Functions for Similarity
    ========================================================== */
 

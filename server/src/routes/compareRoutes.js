@@ -4,8 +4,22 @@ import Vehicle from "../models/Vehicle.js";
 const router = express.Router();
 
 /* ==========================================================
-   🧠 POST /api/compare/ai-verdict
-   Generate server-side verdict summary
+   ⚙️ POST: Save Compare Session
+   ========================================================== */
+router.post("/save", async (req, res) => {
+  try {
+    const { roomNumber, vehicles, verdict, winnerId, userId } = req.body;
+
+    // For now, just log — later you can save to a collection if needed
+    console.log(`🧾 Compare Room ${roomNumber} saved for user: ${userId}`);
+    res.json({ message: "Compare session saved successfully" });
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
+/* ==========================================================
+   🧠 POST: AI Verdict (Server-side)
    ========================================================== */
 router.post("/ai-verdict", async (req, res) => {
   try {
@@ -13,41 +27,39 @@ router.post("/ai-verdict", async (req, res) => {
     if (!vehicles || vehicles.length < 2)
       return res.status(400).json({ message: "Need at least two vehicles." });
 
-    // Fetch latest vehicle data for accuracy
-    const ids = vehicles.map((v) => v._id);
-    const full = await Vehicle.find({ _id: { $in: ids } });
-
-    // Normalize
-    const parsed = full.map((v) => ({
+    // 🧩 Simple comparison logic (can be replaced with AI-based logic)
+    const scores = vehicles.map((v) => ({
       id: v._id,
       name: v.name,
-      brand: v.brand,
-      price: v.price,
-      mileage: parseFloat(v.mileage) || 0,
-      perf: v.performanceScore || 0,
+      score:
+        (v.performanceScore || 0) * 0.4 +
+        (parseFloat(v.mileage) || 0) * 0.3 +
+        (1 / (v.price || 1)) * 0.3,
     }));
 
-    const maxMile = Math.max(...parsed.map((p) => p.mileage));
-    const maxPerf = Math.max(...parsed.map((p) => p.perf));
-    const minPrice = Math.min(...parsed.map((p) => p.price));
-
-    parsed.forEach((v) => {
-      const normMile = maxMile ? v.mileage / maxMile : 0;
-      const normPerf = maxPerf ? v.perf / maxPerf : 0;
-      const normPrice = minPrice ? minPrice / v.price : 0;
-      v.totalScore = normMile * 0.4 + normPerf * 0.4 + normPrice * 0.2;
-    });
-
-    const best = parsed.reduce((a, b) => (b.totalScore > a.totalScore ? b : a), parsed[0]);
-
-    // 🗣️ Natural verdict
-    const verdict = `💬 Overall, ${best.name} from ${best.brand} emerges as the most balanced choice, offering impressive performance and efficiency for its price segment.`;
+    const winner = scores.reduce((a, b) => (b.score > a.score ? b : a));
+    const verdict = `💬 ${winner.name} wins this comparison with the best overall balance of performance, mileage, and price.`;
 
     res.json({
       verdict,
-      winnerId: best.id,
-      scores: parsed.map(({ id, name, totalScore }) => ({ id, name, totalScore })),
+      winnerId: winner.id,
     });
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
+/* ==========================================================
+   🧾 GET: Compare Vehicles by IDs (fallback)
+   ========================================================== */
+router.post("/", async (req, res) => {
+  try {
+    const { ids } = req.body;
+    if (!ids || !Array.isArray(ids) || ids.length < 2)
+      return res.status(400).json({ message: "Please provide at least 2 IDs." });
+
+    const vehicles = await Vehicle.find({ _id: { $in: ids } });
+    res.json({ vehicles });
   } catch (err) {
     res.status(500).json({ error: err.message });
   }

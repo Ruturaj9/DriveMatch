@@ -1,8 +1,8 @@
 import React, { useState, useContext, useEffect } from "react";
 import { Link, NavLink, useLocation } from "react-router-dom";
 import { ThemeContext } from "../context/ThemeContext";
-import { motion, AnimatePresence } from "framer-motion"; // ✅ Add this
-
+import { motion, AnimatePresence } from "framer-motion";
+import { Clock3 } from "lucide-react";
 
 const Navbar = () => {
   const { theme, toggleTheme } = useContext(ThemeContext);
@@ -17,7 +17,8 @@ const Navbar = () => {
   const navItems = [
     { name: "Home", path: "/" },
     { name: "Compare", path: "/compare" },
-    { name: "Insights", path: "/insights" },
+    // you can re-enable this later
+    // { name: "Insights", path: "/insights" },
   ];
 
   return (
@@ -49,6 +50,21 @@ const Navbar = () => {
             </NavLink>
           ))}
 
+          {/* Compare History Button */}
+          <NavLink
+            to="/compare-history"
+            className={({ isActive }) =>
+              `flex items-center gap-2 px-3 py-2 rounded-md text-sm font-medium transition ${
+                isActive
+                  ? "text-blue-600 dark:text-blue-400 bg-blue-50 dark:bg-blue-900/30"
+                  : "text-gray-700 dark:text-gray-300 hover:text-blue-500"
+              }`
+            }
+          >
+            <Clock3 size={16} />
+            Compare History
+          </NavLink>
+
           {/* Theme Toggle */}
           <button
             onClick={toggleTheme}
@@ -71,7 +87,12 @@ const Navbar = () => {
       {/* Mobile Dropdown */}
       <AnimatePresence>
         {menuOpen && (
-          <div className="md:hidden bg-white dark:bg-gray-900 border-t border-gray-200 dark:border-gray-700">
+          <motion.div
+            initial={{ opacity: 0, y: -10 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -10 }}
+            className="md:hidden bg-white dark:bg-gray-900 border-t border-gray-200 dark:border-gray-700"
+          >
             {navItems.map((item) => (
               <NavLink
                 key={item.name}
@@ -88,6 +109,24 @@ const Navbar = () => {
                 {item.name}
               </NavLink>
             ))}
+
+            {/* Compare History (Mobile) */}
+            <NavLink
+              to="/compare-history"
+              onClick={() => setMenuOpen(false)}
+              className={({ isActive }) =>
+                `flex items-center gap-2 px-6 py-3 border-b border-gray-100 dark:border-gray-700 ${
+                  isActive
+                    ? "text-blue-600 dark:text-blue-400 font-semibold"
+                    : "text-gray-700 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400"
+                }`
+              }
+            >
+              <Clock3 size={16} />
+              Compare History
+            </NavLink>
+
+            {/* Theme Toggle (Mobile) */}
             <button
               onClick={() => {
                 toggleTheme();
@@ -97,7 +136,7 @@ const Navbar = () => {
             >
               {theme === "dark" ? "🌞 Light Mode" : "🌙 Dark Mode"}
             </button>
-          </div>
+          </motion.div>
         )}
       </AnimatePresence>
     </nav>
