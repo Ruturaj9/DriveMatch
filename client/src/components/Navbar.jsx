@@ -1,6 +1,8 @@
 import React, { useState, useContext, useEffect } from "react";
 import { Link, NavLink, useLocation } from "react-router-dom";
 import { ThemeContext } from "../context/ThemeContext";
+import { motion, AnimatePresence } from "framer-motion"; // ✅ Add this
+
 
 const Navbar = () => {
   const { theme, toggleTheme } = useContext(ThemeContext);
