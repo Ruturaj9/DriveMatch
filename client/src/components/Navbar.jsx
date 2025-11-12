@@ -1,15 +1,13 @@
 import React, { useState, useContext, useEffect } from "react";
 import { Link, NavLink, useLocation } from "react-router-dom";
 import { ThemeContext } from "../context/ThemeContext";
-import { motion, AnimatePresence } from "framer-motion";
-import { Clock3, Moon, Sun } from "lucide-react";
+import { Moon, Sun } from "lucide-react";
 
 const Navbar = () => {
   const { theme, toggleTheme } = useContext(ThemeContext);
   const [menuOpen, setMenuOpen] = useState(false);
   const location = useLocation();
 
-  // 🧠 Close mobile menu on route change
   useEffect(() => {
     setMenuOpen(false);
   }, [location]);
@@ -17,169 +15,72 @@ const Navbar = () => {
   const navItems = [
     { name: "Home", path: "/" },
     { name: "Compare", path: "/compare" },
-    // you can re-enable Insights later
+    { name: "Insights", path: "/insights" },
+    { name: "About", path: "/about" },
   ];
 
   return (
     <nav
-      className={`sticky top-0 z-50 backdrop-blur-md border-b transition-all duration-300
+      className={`sticky top-0 z-50 border-b transition-colors duration-300 motion-reduce:transition-none backdrop-blur-md navbar-backdrop
         ${
           theme === "dark"
-            ? "bg-[#0d1117]/90 border-gray-800 shadow-[0_1px_0_#161b22]"
-            : "bg-white/90 border-gray-200 shadow-sm"
-        }`}
+            ? "bg-[rgba(0,0,0,0.65)] border-gray-800 shadow-[0_4px_20px_rgba(0,0,0,0.25)]"
+            : "bg-[rgba(255,255,255,0.72)] border-gray-200 shadow-[0_4px_12px_rgba(0,0,0,0.04)]"
+        }
+      `}
     >
-      <div className="max-w-7xl mx-auto flex justify-between items-center px-6 py-3">
+      <div className="max-w-7xl mx-auto flex justify-between items-center px-6 md:px-10 py-3 md:py-4 transition-all duration-300">
         {/* 🚗 Brand */}
         <Link
           to="/"
-          className="text-2xl font-bold text-blue-600 dark:text-blue-400 hover:opacity-90 transition"
+          className="text-2xl md:text-3xl font-bold tracking-tight bg-gradient-to-r from-indigo-500 via-sky-500 to-cyan-400 bg-clip-text text-transparent hover:opacity-90 transition-opacity duration-300 select-none "
         >
           DriveMatch
         </Link>
 
-        {/* 🧭 Desktop Nav */}
-        <div className="hidden md:flex items-center gap-6">
-          {navItems.map((item) => (
-            <NavLink
-              key={item.name}
-              to={item.path}
-              className={({ isActive }) =>
-                `font-medium transition-colors ${
-                  isActive
-                    ? "text-blue-600 dark:text-blue-400"
-                    : "text-gray-700 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400"
-                }`
-              }
-            >
-              {item.name}
-            </NavLink>
-          ))}
-
-          {/* 🕓 Compare History */}
-          <NavLink
-            to="/compare-history"
-            className={({ isActive }) =>
-              `flex items-center gap-2 px-3 py-2 rounded-md text-sm font-medium transition ${
-                isActive
-                  ? "text-blue-600 dark:text-blue-400 bg-blue-50 dark:bg-blue-900/30"
-                  : "text-gray-700 dark:text-gray-300 hover:text-blue-500 dark:hover:text-blue-400"
-              }`
-            }
-          >
-            <Clock3 size={16} />
-            Compare History
-          </NavLink>
-
-          {/* 🌗 Fancy Theme Toggle */}
-          <button
-            onClick={toggleTheme}
-            className="ml-4 w-10 h-10 flex items-center justify-center rounded-full
-                       bg-gray-100 dark:bg-[#161b22] border border-gray-200 dark:border-gray-700
-                       hover:scale-105 transition-transform shadow-sm"
-            title={theme === "dark" ? "Switch to Light Mode" : "Switch to Dark Mode"}
-          >
-            <motion.div
-              key={theme}
-              initial={{ rotate: -90, opacity: 0 }}
-              animate={{ rotate: 0, opacity: 1 }}
-              transition={{ duration: 0.3 }}
-            >
-              {theme === "dark" ? (
-                <Sun size={18} className="text-yellow-400" />
-              ) : (
-                <Moon size={18} className="text-blue-600" />
-              )}
-            </motion.div>
-          </button>
-        </div>
-
-        {/* 📱 Mobile Menu Button */}
-        <button
-          aria-label="Toggle navigation menu"
-          onClick={() => setMenuOpen(!menuOpen)}
-          className="md:hidden text-2xl text-gray-700 dark:text-gray-200 focus:outline-none"
-        >
-          ☰
-        </button>
-      </div>
-
-      {/* 📱 Mobile Dropdown */}
-      <AnimatePresence>
-        {menuOpen && (
-          <motion.div
-            initial={{ opacity: 0, y: -10 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -10 }}
-            className={`md:hidden border-t transition-all ${
-              theme === "dark"
-                ? "bg-[#0d1117] border-gray-800"
-                : "bg-white border-gray-200"
-            }`}
-          >
+        {/* 🧭 Nav Links + Toggle */}
+        <div className="flex items-center gap-8 md:gap-10 ">
+          <div className="flex items-center gap-6 md:gap-8">
             {navItems.map((item) => (
               <NavLink
                 key={item.name}
                 to={item.path}
-                onClick={() => setMenuOpen(false)}
                 className={({ isActive }) =>
-                  `block px-6 py-3 border-b ${
-                    theme === "dark"
-                      ? "border-gray-800 text-gray-300 hover:text-blue-400"
-                      : "border-gray-100 text-gray-700 hover:text-blue-600"
-                  } ${
+                  `relative font-medium text-[15px] tracking-[0.02em] transition-all duration-300
+                  ${
                     isActive
-                      ? "font-semibold text-blue-600 dark:text-blue-400"
-                      : ""
-                  }`
+                      ? "text-indigo-600 dark:text-indigo-400"
+                      : "text-gray-700 dark:text-gray-300 hover:text-indigo-500 dark:hover:text-indigo-400"
+                  }
+                  after:content-[''] after:absolute after:left-0 after:-bottom-[3px] after:h-[2px]
+                  after:bg-indigo-500 after:rounded-full after:w-0 hover:after:w-full after:transition-all after:duration-300`
                 }
               >
                 {item.name}
               </NavLink>
             ))}
+          </div>
 
-            {/* Compare History */}
-            <NavLink
-              to="/compare-history"
-              onClick={() => setMenuOpen(false)}
-              className={({ isActive }) =>
-                `flex items-center gap-2 px-6 py-3 border-b ${
-                  theme === "dark"
-                    ? "border-gray-800 text-gray-300 hover:text-blue-400"
-                    : "border-gray-100 text-gray-700 hover:text-blue-600"
-                } ${
-                  isActive
-                    ? "font-semibold text-blue-600 dark:text-blue-400"
-                    : ""
-                }`
+          {/* 🌗 Theme Toggle */}
+          <button
+            onClick={toggleTheme}
+            aria-label="Toggle Theme"
+            className={`flex items-center justify-center w-10 h-10 rounded-full border transition-colors duration-200 motion-reduce:transition-none
+              ${
+                theme === "dark"
+                  ? "border-gray-700 bg-[#161b22]/70 hover:bg-[#1e2630]/80 hover:border-indigo-500 hover:shadow-[0_0_12px_rgba(99,102,241,0.25)]"
+                  : "border-gray-300 bg-white/70 hover:bg-indigo-50 hover:border-indigo-400 hover:shadow-[0_0_12px_rgba(99,102,241,0.2)]"
               }
-            >
-              <Clock3 size={16} />
-              Compare History
-            </NavLink>
-
-            {/* Theme Toggle */}
-            <button
-              onClick={() => {
-                toggleTheme();
-                setMenuOpen(false);
-              }}
-              className="flex items-center gap-2 w-full px-6 py-3 bg-gray-100 dark:bg-[#161b22]
-                         text-gray-800 dark:text-gray-200 text-sm"
-            >
-              {theme === "dark" ? (
-                <>
-                  <Sun size={16} className="text-yellow-400" /> Light Mode
-                </>
-              ) : (
-                <>
-                  <Moon size={16} className="text-blue-600" /> Dark Mode
-                </>
-              )}
-            </button>
-          </motion.div>
-        )}
-      </AnimatePresence>
+              backdrop-blur-md navbar-backdrop active:scale-95`}
+          >
+            {theme === "dark" ? (
+              <Sun className="w-5 h-5 text-yellow-400 transition-transform duration-500 hover:rotate-[360deg]" />
+            ) : (
+              <Moon className="w-5 h-5 text-gray-700 transition-transform duration-500 hover:rotate-[360deg]" />
+            )}
+          </button>
+        </div>
+      </div>
     </nav>
   );
 };

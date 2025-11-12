@@ -1,23 +1,23 @@
-// module.exports = {
-//   purge: [],
-//   darkMode: false, // or 'media' or 'class'
-//   theme: {
-//     extend: {},
-//   },
-//   variants: {
-//     extend: {},
-//   },
-//   plugins: [],
-// }
-
 /** @type {import('tailwindcss').Config} */
 export default {
   content: [
     "./index.html",
     "./src/**/*.{js,jsx,ts,tsx}",
   ],
+  darkMode: "class", // Enables dark mode via .dark class
   theme: {
-    extend: {},
+    extend: {
+      fontFamily: {
+        inter: ['Inter', 'sans-serif'],
+        poppins: ['Poppins', 'sans-serif'],
+      },
+      colors: {
+        brand: {
+          light: '#4f8bff',
+          dark: '#1e40af',
+        },
+      },
+    },
   },
   plugins: [],
-}
+};

@@ -1,27 +1,57 @@
+/* ==========================================================
+   ✅ Correct Tailwind + Font Import Order
+   ========================================================== */
+
+/* 1️⃣ Import fonts first */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Poppins:wght@400;500;600;700&display=swap');
+
+/* 2️⃣ Tailwind layers */
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
 /* ==========================================================
-   🌗 Global Theme Styling — Rich Light & Dark Modes (Fixed)
+   🌗 Global Theme Styling — Light & Dark Modes
    ========================================================== */
+html,
+body {
+  @apply transition-colors duration-500;
+  transition-timing-function: ease-in-out; /* normal CSS */
+}
+
+
 @layer base {
-  /* Default Light Mode */
+  /* Light mode */
   body {
-    background-color: #f8fafc; /* rich light gray */
+    background-color: #f8fafc;
     color: #1e293b;
+    font-family: 'Inter', sans-serif;
     transition: background-color 0.3s, color 0.3s;
   }
 
-  /* Dark Mode (Rich Black Palette) */
+/* Cross-browser backdrop-filter helper for navbars and translucent elements */
+.navbar-backdrop {
+  -webkit-backdrop-filter: blur(12px);
+  backdrop-filter: blur(12px);
+}
+
+/* Reduce blur on small screens for better performance */
+@media (max-width: 640px) {
+  .navbar-backdrop {
+    -webkit-backdrop-filter: blur(6px);
+    backdrop-filter: blur(6px);
+  }
+}
+  /* Dark mode */
   .dark body {
-    background-color: #0d1117; /* deep rich black */
+    background-color: #0d1117; /* GitHub black */
     color: #c9d1d9;
   }
 
   /* Headings */
   h1, h2, h3, h4, h5, h6 {
     color: #0f172a;
+    font-family: 'Poppins', sans-serif;
   }
   .dark h1, .dark h2, .dark h3, .dark h4, .dark h5, .dark h6 {
     color: #e6edf3;
@@ -39,12 +69,12 @@
     color: #3b82f6;
   }
 
-  /* Card Styling */
+  /* Card components */
   .card {
     background-color: #ffffff;
     border: 1px solid #e5e7eb;
     border-radius: 1rem;
-    box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
     transition: background-color 0.3s, border-color 0.3s;
   }
   .dark .card {
@@ -52,7 +82,7 @@
     border-color: #2e343d;
   }
 
-  /* Inputs & Selects */
+  /* Inputs */
   input, select, textarea {
     background-color: #f9fafb;
     border: 1px solid #d1d5db;
@@ -106,27 +136,82 @@
   font-weight: bold;
   font-size: 20px;
 }
-
-.typing-dots .dot:nth-child(2) {
-  animation-delay: 0.2s;
-}
-
-.typing-dots .dot:nth-child(3) {
-  animation-delay: 0.4s;
-}
-
+.typing-dots .dot:nth-child(2) { animation-delay: 0.2s; }
+.typing-dots .dot:nth-child(3) { animation-delay: 0.4s; }
 @keyframes blink {
   0%, 80%, 100% { opacity: 0; }
   40% { opacity: 1; }
 }
 
 /* ==========================================================
-   🌟 Page Fade Animation (Optional)
+   🌟 Page Fade Animation
    ========================================================== */
 @keyframes fadeIn {
   from { opacity: 0; transform: translateY(5px); }
   to { opacity: 1; transform: translateY(0); }
 }
-.animate-page-fade {
-  animation: fadeIn 0.5s ease-in-out;
+.animate-page-fade { animation: fadeIn 0.5s ease-in-out; }
+
+/* ==========================================================
+   🚗 Navbar Enhancements — DriveMatch
+   ========================================================== */
+
+/* Navbar fade-down animation on page load */
+@keyframes fadeDown {
+  from { opacity: 0; transform: translateY(-8px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+header {
+  animation: fadeDown 0.4s ease both;
+}
+
+/* Underline reveal (smooth underline effect) */
+@layer utilities {
+  .nav-underline {
+    transform-origin: left;
+    transform: scaleX(0);
+    transition: transform 0.3s ease-in-out;
+  }
+  .nav-underline.show {
+    transform: scaleX(1);
+  }
+}
+
+/* Active dot fallback (for route highlight) */
+.nav-active-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 9999px;
+  background-color: #6366f1;
+  transition: transform 0.25s ease, opacity 0.25s ease;
+}
+
+/* Font override for nav links */
+.font-poppins {
+  font-family: 'Poppins', sans-serif;
+}
+
+/* Slight blur/saturation for glass richness */
+header.backdrop-blur-lg {
+  backdrop-filter: blur(14px) saturate(150%);
+}
+header.backdrop-blur-sm {
+  backdrop-filter: blur(8px) saturate(130%);
+}
+
+/* Subtle glowing effect for theme icon hover */
+.theme-glow-light:hover {
+  box-shadow: 0 0 10px rgba(99, 102, 241, 0.25);
+}
+.theme-glow-dark:hover {
+  box-shadow: 0 0 12px rgba(250, 204, 21, 0.25);
+}
+
+/* Logo pulse glow hover */
+@keyframes pulseGlow {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50% { opacity: 0.9; transform: scale(1.03); }
+}
+.logo-glow:hover {
+  animation: pulseGlow 2s infinite ease-in-out;
 }
