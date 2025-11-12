@@ -23,10 +23,11 @@ body {
 @layer base {
   /* Light mode */
   body {
-    background-color: #f8fafc;
-    color: #1e293b;
+    background-color: #b6c8da;
+    color: #273244;
     font-family: 'Inter', sans-serif;
     transition: background-color 0.3s, color 0.3s;
+    margin: 0;
   }
 
 /* Cross-browser backdrop-filter helper for navbars and translucent elements */
@@ -46,27 +47,33 @@ body {
   .dark body {
     background-color: #0d1117; /* GitHub black */
     color: #c9d1d9;
+    margin: 0;
+
   }
 
   /* Headings */
   h1, h2, h3, h4, h5, h6 {
-    color: #0f172a;
+    color: #1f2942;
     font-family: 'Poppins', sans-serif;
   }
   .dark h1, .dark h2, .dark h3, .dark h4, .dark h5, .dark h6 {
-    color: #e6edf3;
+    color: #5880a5;
   }
 
   /* Links */
   a {
-    color: #2563eb;
+    color: #6a84bc;
     text-decoration: none;
+    padding: 18px;
+    align-items: flex-start;
+    font-weight: bold;
   }
   a:hover {
     text-decoration: underline;
+    background-color: #121213 ;
   }
   .dark a {
-    color: #3b82f6;
+    color: #a1bbe9;
   }
 
   /* Card components */
@@ -104,18 +111,18 @@ body {
 
   /* Scrollbar */
   ::-webkit-scrollbar {
-    width: 8px;
-    height: 8px;
+    width: 14px;
+    height: 14px;
   }
   ::-webkit-scrollbar-track {
-    background: #f1f5f9;
+    background: #bac8d7;
   }
   ::-webkit-scrollbar-thumb {
-    background: #cbd5e1;
+    background: #6b9dda;
     border-radius: 10px;
   }
   ::-webkit-scrollbar-thumb:hover {
-    background: #94a3b8;
+    background: #2d5286;
   }
   .dark ::-webkit-scrollbar-track {
     background: #161b22;
@@ -201,10 +208,10 @@ header.backdrop-blur-sm {
 
 /* Subtle glowing effect for theme icon hover */
 .theme-glow-light:hover {
-  box-shadow: 0 0 10px rgba(99, 102, 241, 0.25);
+  box-shadow: 0 0 10px rgba(18, 18, 18, 0.25);
 }
 .theme-glow-dark:hover {
-  box-shadow: 0 0 12px rgba(250, 204, 21, 0.25);
+  box-shadow: 0 0 12px rgba(232, 217, 156, 0.25);
 }
 
 /* Logo pulse glow hover */
@@ -214,4 +221,5 @@ header.backdrop-blur-sm {
 }
 .logo-glow:hover {
   animation: pulseGlow 2s infinite ease-in-out;
+
 }

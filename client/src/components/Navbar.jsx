@@ -33,7 +33,7 @@ const Navbar = () => {
         {/* 🚗 Brand */}
         <Link
           to="/"
-          className="text-2xl md:text-3xl font-bold tracking-tight bg-gradient-to-r from-indigo-500 via-sky-500 to-cyan-400 bg-clip-text text-transparent hover:opacity-90 transition-opacity duration-300 select-none "
+          className="text-2xl md:text-3xl font-bold tracking-tight bg-gradient-to-r from-indigo-500 via-sky-500 to-cyan-400 bg-clip-text hover:opacity-90 transition-opacity duration-300 select-none hover:bg-[rgba(34,51,51,0.9)]"
         >
           DriveMatch
         </Link>
@@ -68,8 +68,8 @@ const Navbar = () => {
             className={`flex items-center justify-center w-10 h-10 rounded-full border transition-colors duration-200 motion-reduce:transition-none
               ${
                 theme === "dark"
-                  ? "border-gray-700 bg-[#161b22]/70 hover:bg-[#1e2630]/80 hover:border-indigo-500 hover:shadow-[0_0_12px_rgba(99,102,241,0.25)]"
-                  : "border-gray-300 bg-white/70 hover:bg-indigo-50 hover:border-indigo-400 hover:shadow-[0_0_12px_rgba(99,102,241,0.2)]"
+                  ? "border-gray-700 bg-white/70 hover:bg-[#E8CF0E]/80 hover:border-indigo-500 hover:shadow-[0_0_12px_rgba(232,207,14,0.85)]"
+                  : "border-gray-300 bg-white/70 hover:bg-[#575440] hover:border-indigo-400 hover:shadow-[0_0_12px_rgba(23,23,23,0.95)]"
               }
               backdrop-blur-md navbar-backdrop active:scale-95`}
           >
